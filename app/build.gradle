@@ -21,18 +21,18 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'io.github.active_volcano_ham.twa',
-    hostName: 'active-volcano-ham.github.io', // The domain being opened in the TWA.
-    launchUrl: '/kids-typing-game/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Kids Typing Rain Game', // The application name.
-    launcherName: 'Typing Game', // The name shown on the Android Launcher.
-    themeColor: '#4F46E5', // The color used for the status bar.
+    applicationId: 'app.lovable.discount_detective_bot.twa',
+    hostName: 'discount-detective-bot.lovable.app', // The domain being opened in the TWA.
+    launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
+    name: 'Buy or Hold', // The application name.
+    launcherName: 'Buy or Hold', // The name shown on the Android Launcher.
+    themeColor: '#DACBF5', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
     navigationColorDark: '#000000', // The color used for the dark navbar.
     navigationDividerColor: '#000000', // The navbar divider color.
     navigationDividerColorDark: '#000000', // The dark navbar divider color.
-    backgroundColor: '#F7F9FF', // The color used for the splash screen background.
+    backgroundColor: '#DACBF5', // The color used for the splash screen background.
     enableNotifications: true, // Set to true to enable notification delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
@@ -47,14 +47,14 @@ def twaManifest = [
     // 'customtabs' and 'webview'.
     fallbackType: 'customtabs',
     enableSiteSettingsShortcut: 'true',
-    orientation: 'default',
+    orientation: 'portrait',
 ]
 
 android {
     compileSdkVersion 36
-    namespace "io.github.active_volcano_ham.twa"
+    namespace "app.lovable.discount_detective_bot.twa"
     defaultConfig {
-        applicationId "io.github.active_volcano_ham.twa"
+        applicationId "app.lovable.discount_detective_bot.twa"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 1
@@ -76,14 +76,17 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://active-volcano-ham.github.io/kids-typing-game/manifest.json'
+            resValue "string", "webManifestUrl", 'https://discount-detective-bot.lovable.app/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://active-volcano-ham.github.io/kids-typing-game/'
+            resValue "string", "fullScopeUrl", 'https://discount-detective-bot.lovable.app/'
         
 
+        
+            // The data for the app to support web share target.
+            resValue "string", "shareTarget", '{\\"action\\":\\"https://discount-detective-bot.lovable.app/share\\",\\"method\\":\\"GET\\",\\"enctype\\":\\"application/x-www-form-urlencoded\\",\\"params\\":{\\"title\\":\\"title\\",\\"text\\":\\"text\\",\\"url\\":\\"url\\"}}'
         
 
         // The hostname is used when building the intent-filter, so the TWA is able to

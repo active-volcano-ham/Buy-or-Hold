@@ -20,7 +20,7 @@
      application, the package attribute will need to reflect the correct path in order to use
      the abbreviated format. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.active_volcano_ham.twa">
+    package="app.lovable.discount_detective_bot.twa">
 
     
         <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -127,6 +127,10 @@
                 android:value="@string/fallbackType" />
 
             
+                <meta-data
+                    android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
+                    android:resource="@string/shareTarget"/>
+            
 
             
 
@@ -137,6 +141,16 @@
 
             
 
+            
+                <intent-filter>
+                    
+                        <action android:name="android.intent.action.SEND" />
+                    
+                    <category android:name="android.intent.category.DEFAULT" />
+                    
+                        <data android:mimeType="text/plain" />
+                    
+                </intent-filter>
             
 
             <intent-filter>
@@ -150,8 +164,6 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https"
                     android:host="@string/hostName"
-                
-                    android:pathPrefix="/kids-typing-game/"
                 
                 />
             </intent-filter>
