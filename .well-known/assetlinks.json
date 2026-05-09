@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.active_volcano_ham.twa",
+      "sha256_cert_fingerprints": ["SHA256: F3:37:3F:20:A8:DB:4E:AD:51:A2:CD:C2:35:3E:08:23:4E:CE:07:57:1E:17:C0:D4:9A:D8:CC:89:FA:E8:83:77 "]
+    }
+  }]
