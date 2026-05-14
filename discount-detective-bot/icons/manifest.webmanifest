@@ -1,0 +1,30 @@
+{
+  "name": "Buy or Hold",
+  "short_name": "Buy or Hold",
+  "description": "쇼핑몰 상품 가격을 추적하고 목표가 도달 시 푸시 알림을 받으세요",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#dacbf5",
+  "theme_color": "#dacbf5",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": ["shopping", "finance", "productivity"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
