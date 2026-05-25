@@ -1,2 +1,14 @@
-[[{ "relation": ["delegate_permission/common.handle_all_urls"], "target": { "namespace": "android_app", "package_name": "com.active_volcano_ham.twa", "sha256_cert_fingerprints": ["SHA256: A3:7E:2A:4F:85:DB:A1:B0:B0:ED:83:74:F3:3B:1D:C6:68:E4:2A:94:D0:1E:0C:A5:46:0F:18:20:2C:BB:E8"] } }]
-]
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.lovable.discount_detective_bot.twa",
+        "sha256_cert_fingerprints": [
+          "A3:7E:2A:4F:85:DB:A1:B0:B0:ED:83:74:F3:3B:1D:C6:68:E4:2A:94:D0:1E:0C:A5:46:0F:18:20:2C:BB:E8",
+          "E4:BF:6C:FC:5B:65:ED:46:60:5D:99:89:1E:26:87:70:5A:FE:DB:88:1A:7B:25:97:EA:AE:9B:7B:CE:E9:35:26"
+        ]
+      }
+    }
+  ]
+  
