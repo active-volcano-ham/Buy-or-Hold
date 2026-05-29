@@ -24,7 +24,8 @@
   "appVersionCode": 2,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://discount-detective-bot.lovable.app/manifest.json",
+  "webManifestUrl": "https://discount-detective-bot.lov
+  // able.app/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {

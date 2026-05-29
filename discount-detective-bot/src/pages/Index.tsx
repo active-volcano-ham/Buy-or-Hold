@@ -115,7 +115,7 @@ const Index = () => {
               </div>
 
               <p className="text-[10px] text-muted-foreground text-center -mt-1 px-1 leading-snug">
-                <span className="font-medium">Batch Schedule</span> · US: Every 1hr (18:00–07:00 KST) · KR: Every 1hr (08:00–16:00 KST)
+                <span className="font-medium">Batch Schedule</span> · US: Every 1hr (18:00–07:00 KST) · KR: Every 1hr (08:00–20:00 KST)
               </p>
 
               {stocksLoading ? (
