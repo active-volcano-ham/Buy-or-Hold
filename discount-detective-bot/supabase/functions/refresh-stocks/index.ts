@@ -18,10 +18,18 @@ type Quote = {
   name: string | null;
 };
 
-async function fetchChartQuote(symbol: string): Promise<Quote | null> {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`;
+async function fetchChartQuote(symbol: string, locale?: "kr" | "us"): Promise<Quote | null> {
+  const isKr = locale === "kr" || symbol.endsWith(".KS") || symbol.endsWith(".KQ");
+  const langParam = isKr ? "&lang=ko-KR&region=KR" : "&lang=en-US&region=US";
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d${langParam}`;
   try {
-    const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/json" } });
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": UA,
+        Accept: "application/json",
+        "Accept-Language": isKr ? "ko-KR,ko;q=0.9,en;q=0.5" : "en-US,en;q=0.9",
+      },
+    });
     if (!res.ok) {
       console.error(`Yahoo chart HTTP ${res.status} for ${symbol}`);
       return null;
@@ -33,16 +41,38 @@ async function fetchChartQuote(symbol: string): Promise<Quote | null> {
     const price = meta.regularMarketPrice ?? null;
     const prev = meta.chartPreviousClose ?? meta.previousClose ?? null;
     const changePct = price != null && prev ? ((price - prev) / prev) * 100 : null;
+    // For KR tickers, prefer longName (full Korean name) over shortName (English abbrev).
+    const name = isKr
+      ? (meta.longName ?? meta.shortName ?? symbol)
+      : (meta.shortName ?? meta.longName ?? symbol);
     return {
       symbol,
       price,
       previousClose: prev,
       changePercent: changePct,
       currency: meta.currency ?? null,
-      name: meta.shortName ?? meta.longName ?? symbol,
+      name,
     };
   } catch (e) {
     console.error(`Yahoo fetch failed for ${symbol}:`, e);
+    return null;
+  }
+}
+
+// Fetch the Korean stock name from Naver Finance (Yahoo returns English regardless of locale).
+async function fetchNaverKrName(ticker: string): Promise<string | null> {
+  const code = ticker.trim().toUpperCase().replace(/\.(KS|KQ)$/i, "");
+  if (!/^\d{6}$/.test(code)) return null;
+  try {
+    const res = await fetch(`https://m.stock.naver.com/api/stock/${code}/basic`, {
+      headers: { "User-Agent": UA, Accept: "application/json", "Accept-Language": "ko-KR,ko;q=0.9" },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const name = json?.stockName;
+    return typeof name === "string" && name.length > 0 ? name : null;
+  } catch (e) {
+    console.error(`Naver name fetch failed for ${ticker}:`, e);
     return null;
   }
 }
@@ -53,8 +83,12 @@ async function fetchKrQuote(ticker: string): Promise<Quote | null> {
   const candidates: string[] =
     t.endsWith(".KS") || t.endsWith(".KQ") ? [t] : [`${t}.KS`, `${t}.KQ`];
   for (const sym of candidates) {
-    const q = await fetchChartQuote(sym);
-    if (q && q.price != null) return q;
+    const q = await fetchChartQuote(sym, "kr");
+    if (q && q.price != null) {
+      const krName = await fetchNaverKrName(sym);
+      if (krName) q.name = krName;
+      return q;
+    }
   }
   return null;
 }

@@ -5,13 +5,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-async function fetchYahooQuote(ticker: string) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`;
+async function fetchYahooQuote(ticker: string, locale?: "kr" | "us") {
+  const isKr = locale === "kr" || ticker.endsWith(".KS") || ticker.endsWith(".KQ");
+  const langParam = isKr ? "&lang=ko-KR&region=KR" : "&lang=en-US&region=US";
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d${langParam}`;
   const res = await fetch(url, {
     headers: {
       "User-Agent":
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
       Accept: "application/json",
+      "Accept-Language": isKr ? "ko-KR,ko;q=0.9,en;q=0.5" : "en-US,en;q=0.9",
     },
   });
   if (!res.ok) throw new Error(`Yahoo HTTP ${res.status}`);
@@ -21,14 +24,41 @@ async function fetchYahooQuote(ticker: string) {
   if (!meta) throw new Error("Ticker not found on Yahoo Finance");
   const price = meta.regularMarketPrice ?? null;
   const prev = meta.chartPreviousClose ?? meta.previousClose ?? null;
+  // For KR tickers, prefer longName (full Korean name) over shortName (English abbrev).
+  const name = isKr
+    ? (meta.longName || meta.shortName || meta.symbol || ticker)
+    : (meta.shortName || meta.longName || meta.symbol || ticker);
   return {
     symbol: meta.symbol || ticker,
-    name: meta.shortName || meta.longName || meta.symbol || ticker,
+    name,
     currency: meta.currency || "USD",
     price,
     previousClose: prev,
     changePercent: price != null && prev ? ((price - prev) / prev) * 100 : null,
   };
+}
+
+// Fetch Korean stock name from Naver (Yahoo returns English regardless of locale).
+async function fetchNaverKrName(ticker: string): Promise<string | null> {
+  const code = ticker.trim().toUpperCase().replace(/\.(KS|KQ)$/i, "");
+  if (!/^\d{6}$/.test(code)) return null;
+  try {
+    const res = await fetch(`https://m.stock.naver.com/api/stock/${code}/basic`, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        Accept: "application/json",
+        "Accept-Language": "ko-KR,ko;q=0.9",
+      },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const name = json?.stockName;
+    return typeof name === "string" && name.length > 0 ? name : null;
+  } catch (e) {
+    console.error(`Naver name fetch failed for ${ticker}:`, e);
+    return null;
+  }
 }
 
 // Try Yahoo Finance with KR suffixes (.KS for KOSPI, .KQ for KOSDAQ).
@@ -44,8 +74,12 @@ async function fetchYahooKr(rawTicker: string) {
   let lastErr: unknown = null;
   for (const sym of candidates) {
     try {
-      const q = await fetchYahooQuote(sym);
-      if (q.price != null) return q;
+      const q = await fetchYahooQuote(sym, "kr");
+      if (q.price != null) {
+        const krName = await fetchNaverKrName(sym);
+        if (krName) q.name = krName;
+        return q;
+      }
       lastErr = new Error(`No price for ${sym}`);
     } catch (e) {
       lastErr = e;

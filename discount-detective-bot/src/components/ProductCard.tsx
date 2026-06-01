@@ -78,14 +78,19 @@ export const ProductCard = ({
           )}
         </div>
 
-        <div className="flex gap-1.5 pt-2">
-          <Button size="sm" onClick={() => onSetTarget(product)} className="flex-1 rounded-lg h-8 text-xs">
-            <Target className="h-3 w-3 mr-1" />목표가
+        <div className="flex gap-1 pt-2 w-full">
+          <Button
+            size="sm"
+            onClick={() => onSetTarget(product)}
+            className="flex-1 min-w-0 shrink rounded-lg h-7 text-[11px] px-1.5"
+          >
+            <Target className="h-2.5 w-2.5 mr-1 shrink-0" />
+            <span className="truncate">목표가</span>
           </Button>
           <Button
             size="sm"
             variant="outline"
-            className="rounded-lg h-8 w-8 p-0"
+            className="rounded-lg h-7 w-7 p-0 shrink-0"
             onClick={async () => {
               try {
                 await refresh.mutateAsync(product.id);
@@ -96,18 +101,18 @@ export const ProductCard = ({
             }}
             disabled={refresh.isPending}
           >
-            <RefreshCw className={`h-3 w-3 ${refresh.isPending ? "animate-spin" : ""}`} />
+            <RefreshCw className={`h-2.5 w-2.5 ${refresh.isPending ? "animate-spin" : ""}`} />
           </Button>
-          <Button size="sm" variant="outline" className="rounded-lg h-8 w-8 p-0" asChild>
-            <a href={product.url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-3 w-3" /></a>
+          <Button size="sm" variant="outline" className="rounded-lg h-7 w-7 p-0 shrink-0" asChild>
+            <a href={product.url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-2.5 w-2.5" /></a>
           </Button>
           <Button
             size="sm"
             variant="outline"
-            className="rounded-lg h-8 w-8 p-0 text-destructive hover:text-destructive"
+            className="rounded-lg h-7 w-7 p-0 shrink-0 text-destructive hover:text-destructive"
             onClick={() => del.mutate(product.id)}
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash2 className="h-2.5 w-2.5" />
           </Button>
         </div>
       </div>
