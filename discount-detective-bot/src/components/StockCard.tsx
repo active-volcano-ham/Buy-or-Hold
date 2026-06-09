@@ -90,7 +90,7 @@ export const StockCard = ({
         {!noData && (
           <Badge
             variant="secondary"
-            className={`flex items-center gap-0.5 px-1.5 py-0 text-[10px] shrink-0 ${up ? "text-emerald-600" : "text-destructive"}`}
+            className={`flex items-center gap-0.5 px-1.5 py-0 text-[10px] shrink-0 ${up ? "!text-emerald-600" : "!text-destructive"}`}
           >
             {up ? <TrendingUp className="h-2.5 w-2.5" /> : <TrendingDown className="h-2.5 w-2.5" />}
             {up ? "+" : ""}
