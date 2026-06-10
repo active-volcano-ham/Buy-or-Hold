@@ -21,7 +21,8 @@ type Quote = {
 async function fetchChartQuote(symbol: string, locale?: "kr" | "us"): Promise<Quote | null> {
   const isKr = locale === "kr" || symbol.endsWith(".KS") || symbol.endsWith(".KQ");
   const langParam = isKr ? "&lang=ko-KR&region=KR" : "&lang=en-US&region=US";
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d${langParam}`;
+  // range=1d so chartPreviousClose = previous trading day's close (1-day change).
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d${langParam}`;
   try {
     const res = await fetch(url, {
       headers: {
