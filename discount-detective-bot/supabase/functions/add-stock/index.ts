@@ -8,7 +8,9 @@ const corsHeaders = {
 async function fetchYahooQuote(ticker: string, locale?: "kr" | "us") {
   const isKr = locale === "kr" || ticker.endsWith(".KS") || ticker.endsWith(".KQ");
   const langParam = isKr ? "&lang=ko-KR&region=KR" : "&lang=en-US&region=US";
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d${langParam}`;
+ // IMPORTANT: range must be 1d so chartPreviousClose = previous trading day's close.
+ // With range=5d, chartPreviousClose is the close before the 5-day window (gives a 5-day change).
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d${langParam}`;
   const res = await fetch(url, {
     headers: {
       "User-Agent":
